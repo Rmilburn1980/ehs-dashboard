@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Richard Milburn — EHS Readiness Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B1F3A;
+    --navy-light:#16305A;
+    --amber:#FFB703;
+    --amber-dark:#C88A00;
+    --teal:#0F766E;
+    --crimson:#E63946;
+    --bg:#F1F3F6;
+    --panel:#FFFFFF;
+    --ink:#1E2A3A;
+    --ink-soft:#5B6B7F;
+    --line:#DCE3EA;
+    --gauge-track:#E4E9EF;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Oswald',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  /* ---------- Header ---------- */
+  header.top{
+    background:linear-gradient(135deg,var(--navy) 0%, var(--navy-light) 100%);
+    color:#fff;
+    padding:28px 24px 0 24px;
+  }
+  .top-inner{
+    max-width:1180px;
+    margin:0 auto;
+    display:flex;
+    flex-wrap:wrap;
+    gap:24px;
+    align-items:flex-end;
+    justify-content:space-between;
+    padding-bottom:22px;
+  }
+  .brand-block .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    color:var(--amber);
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .brand-block h1{
+    font-size:clamp(28px,4vw,42px);
+    margin:0 0 6px 0;
+    font-weight:600;
+    line-height:1.05;
+  }
+  .brand-block p.sub{
+    margin:0;
+    color:#C9D4E3;
+    font-size:15px;
+    max-width:520px;
+  }
+  .contact-line{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:#9FB2CB;
+    margin-top:10px;
+  }
+  .contact-line a{color:#CFE0F5; text-decoration:none;}
+  .contact-line a:hover{text-decoration:underline;}
+
+  .hero-gauge{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:14px;
+    padding:14px 20px;
+  }
+  .hero-gauge .g-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    color:#AFC1D8;
+    text-transform:uppercase;
+  }
+  .hero-gauge .g-value{
+    font-family:'Oswald',sans-serif;
+    font-size:34px;
+    color:var(--amber);
+    line-height:1;
+    margin-top:2px;
+  }
+
+  /* ---------- Tabs ---------- */
+  nav.tabs{
+    max-width:1180px;
+    margin:0 auto;
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+  }
+  nav.tabs button{
+    background:transparent;
+    border:none;
+    color:#B9C8DC;
+    font-family:'Oswald',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    font-size:14px;
+    padding:12px 18px;
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+    transition:color .15s, border-color .15s;
+  }
+  nav.tabs button:hover{color:#fff;}
+  nav.tabs button.active{
+    color:#fff;
+    border-bottom:3px solid var(--amber);
+  }
+
+  main{
+    max-width:1180px;
+    margin:0 auto;
+    padding:32px 24px 80px 24px;
+  }
+  section.tabpanel{display:none;}
+  section.tabpanel.active{display:block; animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  .panel-title{
+    font-size:26px;
+    color:var(--navy);
+    margin:0 0 6px 0;
+  }
+  .panel-lede{
+    color:var(--ink-soft);
+    font-size:15px;
+    max-width:760px;
+    margin:0 0 28px 0;
+    line-height:1.55;
+  }
+
+  /* ---------- Stat cards ---------- */
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:14px;
+    margin-bottom:32px;
+  }
+  .stat-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:4px solid var(--amber);
+    border-radius:10px;
+    padding:16px 18px;
+  }
+  .stat-card .num{
+    font-family:'Oswald',sans-serif;
+    font-size:32px;
+    color:var(--navy);
+    line-height:1;
+  }
+  .stat-card .lbl{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-top:6px;
+    line-height:1.35;
+  }
+  .stat-card.teal{border-left-color:var(--teal);}
+  .stat-card.crimson{border-left-color:var(--crimson);}
+
+  /* ---------- Panels / cards ---------- */
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 24px;
+    margin-bottom:20px;
+  }
+  .card h3{
+    font-size:16px;
+    color:var(--navy);
+    margin:0 0 14px 0;
+  }
+  .quote{
+    font-size:15.5px;
+    line-height:1.6;
+    color:var(--ink);
+    font-style:italic;
+    border-left:3px solid var(--amber);
+    padding-left:16px;
+  }
+
+  /* ---------- Bars ---------- */
+  .bar-row{margin-bottom:16px;}
+  .bar-row:last-child{margin-bottom:0;}
+  .bar-row .bar-head{
+    display:flex;
+    justify-content:space-between;
+    font-size:13.5px;
+    margin-bottom:5px;
+    color:var(--ink);
+  }
+  .bar-row .bar-head .mono{color:var(--ink-soft); font-size:12.5px;}
+  .bar-track{
+    background:var(--gauge-track);
+    border-radius:6px;
+    height:10px;
+    overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;
+    border-radius:6px;
+    background:linear-gradient(90deg, var(--teal), #14b8a6);
+  }
+  .bar-fill.amber{background:linear-gradient(90deg, var(--amber-dark), var(--amber));}
+
+  .split-two{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:20px;
+  }
+  @media (max-width:820px){ .split-two{grid-template-columns:1fr;} }
+
+  .gauge-row{
+    display:flex;
+    gap:20px;
+    justify-content:space-around;
+    margin-bottom:16px;
+  }
+  .gauge-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .gauge-label{
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:6px;
+    line-height:1.35;
+  }
+  .gauge-label .mono{font-size:11px;}
+
+  #trendChart svg{display:block; width:100%; height:auto;}
+
+  /* Before/after compare */
+  .compare{
+    display:flex;
+    align-items:flex-end;
+    gap:22px;
+    height:150px;
+    padding-top:10px;
+  }
+  .compare .col{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    height:100%;
+    flex:1;
+  }
+  .compare .col .block{
+    width:100%;
+    border-radius:6px 6px 0 0;
+  }
+  .compare .col .block.before{background:#CBD5E1;}
+  .compare .col .block.after{background:linear-gradient(180deg,#14b8a6,var(--teal));}
+  .compare .col .val{font-family:'Oswald',sans-serif; font-size:20px; color:var(--navy); margin-bottom:4px;}
+  .compare .col .cap{font-size:12px; color:var(--ink-soft); margin-top:8px; text-align:center;}
+
+  /* ---------- ISO checklist ---------- */
+  .clause-summary-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:10px;
+    margin-bottom:26px;
+  }
+  .clause-chip{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 14px;
+    cursor:pointer;
+    transition:box-shadow .15s, transform .15s;
+  }
+  .clause-chip:hover{box-shadow:0 4px 14px rgba(11,31,58,0.08); transform:translateY(-1px);}
+  .clause-chip .cn{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft);}
+  .clause-chip .ct{font-size:13px; font-weight:600; color:var(--navy); margin:2px 0 8px 0;}
+  .clause-chip .cbar{height:6px; border-radius:4px; background:var(--gauge-track); overflow:hidden;}
+  .clause-chip .cbar i{display:block; height:100%; background:var(--teal);}
+  .clause-chip .cpct{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); margin-top:6px;}
+
+  .clause-block{margin-bottom:26px;}
+  .clause-block .clause-head{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:10px;
+    padding-bottom:8px;
+    border-bottom:2px solid var(--navy);
+  }
+  .clause-block .clause-head h3{margin:0; font-size:17px; color:var(--navy);}
+  .clause-block .clause-head .cpct{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink-soft); margin-left:auto;}
+
+  .check-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:10px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  .check-item:last-child{border-bottom:none;}
+  .check-item input[type=checkbox]{
+    width:19px;height:19px;
+    margin-top:2px;
+    accent-color:var(--teal);
+    flex-shrink:0;
+    cursor:pointer;
+  }
+  .check-item label{
+    font-size:14.5px;
+    line-height:1.45;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .check-item .code{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--teal);
+    display:block;
+    margin-bottom:2px;
+  }
+  .check-item.checked label{color:var(--ink-soft);}
+  .check-item.checked .code{color:#9CA9B8;}
+
+  .reset-row{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:6px;
+  }
+  .reset-row button{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    font-size:12.5px;
+    padding:7px 12px;
+    border-radius:7px;
+    cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .reset-row button:hover{border-color:var(--crimson); color:var(--crimson);}
+
+  .disclaimer{
+    background:#FFF8E6;
+    border:1px solid #F2D98B;
+    border-radius:10px;
+    padding:14px 18px;
+    font-size:13.5px;
+    color:#6B5A16;
+    line-height:1.5;
+    margin-bottom:24px;
+  }
+
+  .card.whatsnew{border-top:3px solid var(--teal);}
+  .wn-intro{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    line-height:1.5;
+    margin:0 0 16px 0;
+  }
+  .wn-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:14px;
+  }
+  .wn-item{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:12px 14px;
+  }
+  .wn-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:600;
+    margin-bottom:6px;
+  }
+  .wn-text{
+    font-size:13px;
+    line-height:1.45;
+    color:var(--ink);
+  }
+
+  /* ---------- Roadmap ---------- */
+  .roadmap-col-wrap{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+  }
+  @media (max-width:720px){ .roadmap-col-wrap{grid-template-columns:1fr;} }
+  .roadmap-item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:11px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .roadmap-item:last-child{border-bottom:none;}
+  .roadmap-dot{
+    width:10px;height:10px;border-radius:50%;
+    margin-top:5px;flex-shrink:0;
+  }
+  .roadmap-dot.done{background:var(--teal);}
+  .roadmap-dot.progress{background:var(--amber);}
+  .roadmap-item .rt{font-size:14.5px; color:var(--ink); line-height:1.4;}
+  .roadmap-item .rs{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+
+  footer{
+    text-align:center;
+    padding:26px 24px 40px 24px;
+    color:var(--ink-soft);
+    font-size:12.5px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  footer a{color:var(--teal); text-decoration:none;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand-block">
+      <div class="eyebrow">Personal EHS Portfolio · Live Self-Assessment</div>
+      <h1>EHS Readiness Dashboard</h1>
+      <p class="sub">Richard Milburn — 21 years on the shop floor, now building formal EHS management knowledge on top of it.</p>
+      <div class="contact-line">
+        <a href="https://linkedin.com/in/richard-milburn-manufacturing" target="_blank">linkedin.com/in/richard-milburn-manufacturing</a>
+        &nbsp;·&nbsp;
+        <a href="https://rmilburn1980.github.io/sqcdp-dashboard" target="_blank">rmilburn1980.github.io/sqcdp-dashboard</a>
+      </div>
+    </div>
+    <div class="hero-gauge">
+      <div>
+        <div class="g-label">EHS<br>Self-Assessment</div>
+      </div>
+      <div class="g-value"><span id="heroPct">0</span>%</div>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="safety">Safety Evidence</button>
+    <button class="tab-btn" data-tab="ehs">EHS Readiness (ISO 14001:2026)</button>
+    <button class="tab-btn" data-tab="hs">H&amp;S Management System</button>
+    <button class="tab-btn" data-tab="roadmap">Qualifications Roadmap</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ================= OVERVIEW ================= -->
+  <section class="tabpanel active" id="tab-overview">
+    <h2 class="panel-title">Overview</h2>
+    <p class="panel-lede">A working evidence base for Operations, Continuous Improvement, and EHS leadership roles — including co-implementing SafetyQube, an EHS (environment, health, and safety) management system, on the Caravan Assembly Line at Erwin Hymer Group UK, alongside an honest, in-progress self-assessment against the current ISO 14001 environmental management standard.</p>
+
+    <div class="stat-grid">
+      <div class="stat-card teal">
+        <div class="num">108</div>
+        <div class="lbl">Near-misses personally raised via SafetyQube, 99.7% close rate</div>
+      </div>
+      <div class="stat-card teal">
+        <div class="num">93%</div>
+        <div class="lbl">Design Change Request close rate (29 of 38 raised)</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">29 / 260</div>
+        <div class="lbl">Operatives led, across processes on the line</div>
+      </div>
+      <div class="stat-card crimson">
+        <div class="num">21</div>
+        <div class="lbl">Years, shop floor to Cell Leader (2004–2026)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Approach</h3>
+      <p class="quote">"I've spent 21 years learning what actually changes behaviour on a shop floor — not policy documents, but people trusting that raising a problem leads to it being fixed. Formal frameworks like ISO 14001 give that instinct a structure. This dashboard is where I'm building that structure on top of what I already know works."</p>
+    </div>
+  </section>
+
+  <!-- ================= SAFETY EVIDENCE ================= -->
+  <section class="tabpanel" id="tab-safety">
+    <h2 class="panel-title">Safety Evidence</h2>
+    <p class="panel-lede">Verified outcomes from co-implementing SafetyQube, an EHS management system, and driving root-cause corrective action on an 11-person direct team across 260 processes.</p>
+
+    <div class="card" style="margin-bottom:20px;">
+      <h3>Near-Miss Reporting vs Accident Frequency — Aug 2024 to Feb 2026</h3>
+      <div id="trendChart"></div>
+      <p style="font-size:12.5px; color:var(--ink-soft); margin-top:6px; line-height:1.5;">
+        Monthly counts from the site incident management system. SafetyQube reporting scaled from near-zero to 40+ reports/month from April 2025 — while accident frequency (red) stayed flat throughout, the sign that rising reports reflected a genuine culture shift, not more risk.
+      </p>
+    </div>
+
+    <div class="split-two">
+      <div class="card">
+        <h3>Near-miss reporting — SafetyQube</h3>
+        <div class="gauge-row">
+          <div class="gauge-item">
+            <div id="gaugeCloseRate"></div>
+            <div class="gauge-label">Personal close rate<br><span class="mono">108 raised</span></div>
+          </div>
+          <div class="gauge-item">
+            <div id="gaugeShare"></div>
+            <div class="gauge-label">Share of all<br>site reports</div>
+          </div>
+        </div>
+        <div class="bar-row" style="margin-top:6px;">
+          <div class="bar-head"><span>Site-wide reporting uplift</span><span class="mono">22%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:22%;"></div></div>
+        </div>
+        <p style="font-size:13px; color:var(--ink-soft); margin-top:14px; line-height:1.5;">
+          Accident frequency held flat through 2025–2026 even as reporting rose — the sign that the culture shift caught real risk rather than adding noise.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Design Change Requests</h3>
+        <div class="gauge-row">
+          <div class="gauge-item">
+            <div id="gaugeDcrShare"></div>
+            <div class="gauge-label">Raised by Richard<br><span class="mono">29 of 38 site-wide</span></div>
+          </div>
+          <div class="gauge-item">
+            <div id="gaugeDcrClose"></div>
+            <div class="gauge-label">Close rate<br>on those raised</div>
+          </div>
+        </div>
+        <p style="font-size:13px; color:var(--ink-soft); margin-top:14px; line-height:1.5;">
+          Process: EOL fault identified → root cause traced to design → DCR raised via SOP 4374 → engineering approval → implemented on line.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EHS READINESS (ISO 14001) ================= -->
+  <section class="tabpanel" id="tab-ehs">
+    <h2 class="panel-title">EHS Readiness — ISO 14001:2026</h2>
+    <p class="panel-lede">A working self-assessment against BSI's ISO 14001:2026 Transition Readiness Checklist. Tick what you can genuinely stand behind in an interview — this tracks your own developing EHS management knowledge, not a claim that Erwin Hymer Group holds ISO 14001 certification.</p>
+
+    <div class="disclaimer">
+      <strong>How to use this:</strong> a checked box means you understand the requirement well enough to speak to it confidently and know how you'd apply it — not that a former employer had this formally certified. Your progress saves automatically in this browser.
+    </div>
+
+    <div class="card whatsnew">
+      <h3>What's New in ISO 14001:2026 — interview talking points</h3>
+      <p class="wn-intro">Published 15 April 2026, replacing the 2015 edition (3-year transition, to April 2029). Most of the standard carries over — these are the points genuinely worth being able to speak to:</p>
+      <div class="wn-grid">
+        <div class="wn-item">
+          <div class="wn-tag">Clause 6.3 — new</div>
+          <div class="wn-text">A brand-new clause requiring a structured change management process for the EMS itself — not carried over from 2015, so worth knowing cold.</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">Clause 4.1 / 4.2</div>
+          <div class="wn-text">Climate change is now an explicit, required part of context analysis and interested-party review — not optional background.</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">Clause 6.1.2</div>
+          <div class="wn-text">Environmental aspects must now explicitly consider upstream and downstream (life cycle) impacts, not just on-site activity.</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">Clause 8.1 — broadened</div>
+          <div class="wn-text">Scope widens from "outsourced processes" to the fuller "externally provided processes, products, and services."</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">Clause 9.2 — sharpened</div>
+          <div class="wn-text">Each internal audit now needs its own defined objectives — a specific, checkable requirement rather than just "have a programme."</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">Structural</div>
+          <div class="wn-text">Now follows the Harmonised Structure, aligning EMS clauses with ISO 45001 and ISO 9001 — knowledge here transfers directly to H&amp;S management systems.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clause-summary-grid" id="clauseSummary"></div>
+
+    <div id="clauseBlocks"></div>
+
+    <div class="reset-row">
+      <button id="resetBtn">Reset all ticks</button>
+    </div>
+  </section>
+
+  <!-- ================= H&S MANAGEMENT SYSTEM (POPMAR) ================= -->
+  <section class="tabpanel" id="tab-hs">
+    <h2 class="panel-title">H&amp;S Management System — POPMAR</h2>
+    <p class="panel-lede">A working self-assessment against the HSE HS(G)65 "systems approach" model — Policy, Organising, Planning, Measuring performance, Auditing and Reviewing — the foundation NEBOSH still teaches for building an effective health and safety management system.</p>
+
+    <div class="disclaimer">
+      <strong>How to use this:</strong> same principle as the EMS tab — a checked box means you understand the requirement well enough to speak to it confidently, not a claim that a former employer had a certified OH&amp;S management system in place. Progress saves automatically in this browser.
+    </div>
+
+    <div class="card whatsnew">
+      <h3>Context — where this model sits today</h3>
+      <p class="wn-intro">The source material for this section references BS8800 and OHSAS 18001 — useful history, but both have since been superseded. Worth knowing the timeline for an interview:</p>
+      <div class="wn-grid">
+        <div class="wn-item">
+          <div class="wn-tag">HS(G)65 — still current</div>
+          <div class="wn-text">The POPMAR model itself (Policy, Organising, Planning, Measuring performance, Auditing/Reviewing) remains foundational — HSE refreshed it as "Managing for Health and Safety" but the five-element logic is unchanged and still core to NEBOSH.</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">BS8800:1996 → OHSAS 18001</div>
+          <div class="wn-text">BS8800 was the guidance standard that fed into OHSAS 18001/18002 (1999–2000) — the first certifiable OH&amp;S management system standard.</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">OHSAS 18001 → ISO 45001</div>
+          <div class="wn-text">OHSAS 18001 was withdrawn and superseded by ISO 45001:2018, the current international standard for OH&amp;S management systems — migration completed by March 2021.</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">Why it still matters</div>
+          <div class="wn-text">ISO 45001 shares the same Harmonised Structure as ISO 14001:2026 — the POPMAR thinking below maps directly onto it, so this self-assessment is current practice, not just history.</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">Systems vs. programmes</div>
+          <div class="wn-text">A classic NEBOSH distinction worth having ready: a safety <em>programme</em> just checks compliance with reactive indicators (accident counts); a safety <em>system</em> is a true open system — it has a feedback loop and also measures the input and process side, not just the outcome.</div>
+        </div>
+        <div class="wn-item">
+          <div class="wn-tag">Legal grounding — MHSWR 1992</div>
+          <div class="wn-text">The Planning items on emergency procedures map to real legislation: Reg 3 (risk assessment), Reg 4 (H&amp;S arrangements integrated into management systems), and Reg 7 (procedures for serious and imminent danger) — good to cite by number in an interview.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clause-summary-grid" id="clauseSummary-hs"></div>
+
+    <div id="clauseBlocks-hs"></div>
+
+    <div class="reset-row">
+      <button id="resetBtn-hs">Reset all ticks</button>
+    </div>
+  </section>
+
+  <!-- ================= ROADMAP ================= -->
+  <section class="tabpanel" id="tab-roadmap">
+    <h2 class="panel-title">Qualifications Roadmap</h2>
+    <p class="panel-lede">Formal certification, layered on top of 21 years of applied practice.</p>
+
+    <div class="roadmap-col-wrap">
+      <div class="card">
+        <h3>Completed</h3>
+        <div class="roadmap-item"><div class="roadmap-dot done"></div><div><div class="rt">Lean Six Sigma Yellow Belt</div><div class="rs">CSSC Accredited — July 2026</div></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot done"></div><div><div class="rt">IOSH Managing Safely / Working Safely</div></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot done"></div><div><div class="rt">Leadership and Management Training</div><div class="rs">Graduate</div></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot done"></div><div><div class="rt">Supervisory and Management Training in H&amp;S</div><div class="rs">Graduate</div></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot done"></div><div><div class="rt">NVQ Level 2 — Team Leading</div></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot done"></div><div><div class="rt">Business Improvement Techniques</div></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot done"></div><div><div class="rt">AI Fluency Certification ×6</div><div class="rs">Anthropic Academy, 2026</div></div></div>
+      </div>
+      <div class="card">
+        <h3>In progress</h3>
+        <div class="roadmap-item"><div class="roadmap-dot progress"></div><div><div class="rt">Lean Six Sigma Green Belt</div></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot progress"></div><div><div class="rt">NEBOSH General Certificate</div></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot progress"></div><div><div class="rt">NEBOSH-Verified AI in Occupational Safety and Health</div></div></div>
+        <div class="roadmap-item"><div class="roadmap-dot progress"></div><div><div class="rt">AI in Manufacturing Certification</div></div></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  RICHARD MILBURN &nbsp;·&nbsp; EHS READINESS DASHBOARD &nbsp;·&nbsp; PERSONAL PORTFOLIO TOOL &nbsp;·&nbsp; DATA LAST VERIFIED 2026
+</footer>
+
+<script>
+// ---------------- Tabs ----------------
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ---------------- Checklist frameworks (ISO 14001:2026 + H&S POPMAR) ----------------
+const ISO14001_CLAUSES = [
+  { id:"c4", name:"Clause 4 — Context of the Organization", items:[
+    ["4.1a","Are internal and external environmental issues identified and reviewed (including climate change, biodiversity, pollution, and resources)?"],
+    ["4.1b","Does the EMS context analysis explicitly include climate change and other environmental conditions affecting the organization, and are these documented and monitored?"],
+    ["4.2a","Are interested parties identified with relevant environmental needs and expectations?"],
+    ["4.2b","Are relevant needs and expectations translated into EMS requirements?"],
+    ["4.3","Is the EMS scope defined considering context and life cycle perspective?"],
+    ["4.4","Is the environmental management system established, implemented, and maintained?"]
+  ]},
+  { id:"c5", name:"Clause 5 — Leadership", items:[
+    ["5.1a","Does top management demonstrate leadership and commitment to EMS effectiveness?"],
+    ["5.1b","Does top management promote continual improvement and environmental performance?"],
+    ["5.2a","Is environmental policy established and appropriate to organization context?"],
+    ["5.2b","Does policy include commitment to environmental protection and compliance obligations?"],
+    ["5.3","Are environmental roles, responsibilities, and authorities assigned and communicated?"]
+  ]},
+  { id:"c6", name:"Clause 6 — Planning", items:[
+    ["6.1.2","Are environmental aspects identified considering life cycle perspective?"],
+    ["6.1.3","Are compliance obligations identified and kept up to date?"],
+    ["6.1.4","Are risks and opportunities determined from aspects and compliance obligations?"],
+    ["6.1.5","Are actions planned to address risks, opportunities, and significant aspects?"],
+    ["6.2a","Are environmental objectives established at relevant functions and levels?"],
+    ["6.2b","Are objectives measurable and monitored?"],
+    ["6.3","Is a change management process defined and structured for EMS changes?"]
+  ]},
+  { id:"c7", name:"Clause 7 — Support", items:[
+    ["7.1","Are resources needed for EMS established and provided?"],
+    ["7.2","Are competence requirements defined, evaluated, and appropriate actions taken?"],
+    ["7.3","Are personnel aware of environmental policy, objectives, and impacts?"],
+    ["7.4","Are internal and external communication processes defined?"],
+    ["7.5.1","Is documented information required by EMS maintained?"],
+    ["7.5.3","Is documented information controlled and protected?"]
+  ]},
+  { id:"c8", name:"Clause 8 — Operation", items:[
+    ["8.1a","Are operational controls implemented for significant environmental aspects?"],
+    ["8.1b","Are controls or influence applied to externally provided processes, products, and services?"],
+    ["8.2a","Are emergency preparedness and response plans established?"],
+    ["8.2b","Are emergency response plans tested and reviewed?"]
+  ]},
+  { id:"c9", name:"Clause 9 — Performance Evaluation", items:[
+    ["9.1","Is environmental performance monitored, measured, and analyzed?"],
+    ["9.1.2","Is an evaluation of compliance conducted and documented?"],
+    ["9.2","Is an internal audit programme established and implemented?"],
+    ["9.3a","Is management review conducted at planned intervals?"],
+    ["9.3b","Does management review consider performance, risks, and opportunities?"]
+  ]},
+  { id:"c10", name:"Clause 10 — Improvement", items:[
+    ["10.2a","Are nonconformities identified and corrective actions taken?"],
+    ["10.2b","Are root causes identified and effectiveness of actions reviewed?"],
+    ["10.3","Is continual improvement of EMS and environmental performance demonstrated?"]
+  ]}
+];
+
+const HS_POPMAR_CLAUSES = [
+  { id:"p1", name:"Element 1 — Policy", items:[
+    ["P1.1","Is an effective health and safety policy established, setting a clear direction for the organisation?"],
+    ["P1.2","Does the policy meet the legal requirement for a written statement of H&S policy, where applicable (5+ employees under HSW Act 1974)?"],
+    ["P1.3","Are OH&S objectives set and published, even if only by internal notification?"],
+    ["P1.4","Is OH&S positioned as a prime responsibility of line management, from senior executive to first-line supervisor?"],
+    ["P1.5","Is the policy, the management system, and compliance with it periodically reviewed and audited?"]
+  ]},
+  { id:"p2", name:"Element 2 — Organising", items:[
+    ["P2.1","Is an effective management structure in place for delivering the H&S policy?"],
+    ["P2.2","Are H&S roles, responsibilities, and authorities clearly defined and communicated?"],
+    ["P2.3","Is there a genuine two-way flow of relevant H&S information across the organisation?"],
+    ["P2.4","Is employee competence secured through training?"],
+    ["P2.5","Is there visible, active leadership from senior managers that fosters a positive H&S culture?"],
+    ["P2.6","Are specific individuals nominated for emergency roles (e.g., incident controller, site main controller, fire marshals, first aiders), with deputies covering absence?"]
+  ]},
+  { id:"p3", name:"Element 3 — Planning", items:[
+    ["P3.1","Are risks assessed and risk control systems implemented?"],
+    ["P3.2","Are H&S objectives and management programmes set, with indicators and action plans?"],
+    ["P3.3","Is relevant H&S documentation established and maintained?"],
+    ["P3.4","Are all applicable legal and other requirements specifically identified and kept up to date?"],
+    ["P3.5","Are procedures established for serious and imminent danger — evacuation, escape routes, assembly points, and summoning emergency services (MHSWR 1992, Reg 7)?"],
+    ["P3.6","Are emergency plans regularly tested through drills, and reviewed after any major change to process, plant, or personnel?"]
+  ]},
+  { id:"p4", name:"Element 4 — Measuring Performance", items:[
+    ["P4.1","Are active (proactive) measures in place to monitor achievement of plans and compliance with standards?"],
+    ["P4.2","Are reactive systems in place to monitor accidents, ill health, and incidents?"],
+    ["P4.3","Do accident and incident investigations focus on identifying root causes, not just recording what happened?"],
+    ["P4.4","Is performance data actually used to give feedback and drive improvement, not just filed away?"]
+  ]},
+  { id:"p5", name:"Element 5 — Auditing and Reviewing", items:[
+    ["P5.1","Is an audit programme planned and undertaken to evaluate the management system's effectiveness?"],
+    ["P5.2","Does top management review the system at planned intervals to assess suitability and effectiveness?"],
+    ["P5.3","Are auditors independent of the area being audited, and competent in the relevant standards and legislation?"],
+    ["P5.4","Does each audit produce a documented report covering objectives, scope, findings, non-conformances, and corrective actions?"],
+    ["P5.5","Are audit results fed back to relevant parties with an agreed action plan, responsible persons, and follow-up monitoring?"]
+  ]}
+];
+
+const FRAMEWORKS = [
+  { id:"iso14001", label:"ISO 14001:2026 self-assessment", storageKey:"ehs_iso14001_2026_checklist_v1",
+    summaryElId:"clauseSummary", blocksElId:"clauseBlocks", resetBtnId:"resetBtn", clauses: ISO14001_CLAUSES },
+  { id:"hs", label:"H&S Management System (POPMAR) self-assessment", storageKey:"ehs_hs_popmar_checklist_v1",
+    summaryElId:"clauseSummary-hs", blocksElId:"clauseBlocks-hs", resetBtnId:"resetBtn-hs", clauses: HS_POPMAR_CLAUSES }
+];
+
+FRAMEWORKS.forEach(fw=>{
+  try{ fw.state = JSON.parse(localStorage.getItem(fw.storageKey)) || {}; }
+  catch(e){ fw.state = {}; }
+});
+
+function saveFrameworkState(fw){
+  try{ localStorage.setItem(fw.storageKey, JSON.stringify(fw.state)); }catch(e){}
+}
+
+function clausePercent(fw, clause){
+  const ids = clause.items.map(i=>clause.id+"__"+i[0]);
+  const checked = ids.filter(id=>fw.state[id]).length;
+  return Math.round((checked/ids.length)*100);
+}
+
+function frameworkCounts(fw){
+  const ids = fw.clauses.flatMap(c=>c.items.map(i=>c.id+"__"+i[0]));
+  const checked = ids.filter(id=>fw.state[id]).length;
+  return { checked, total: ids.length };
+}
+
+function overallPercent(){
+  let checked=0, total=0;
+  FRAMEWORKS.forEach(fw=>{
+    const c = frameworkCounts(fw);
+    checked += c.checked; total += c.total;
+  });
+  return total ? Math.round((checked/total)*100) : 0;
+}
+
+function renderFramework(fw){
+  const summaryEl = document.getElementById(fw.summaryElId);
+  const blocksEl = document.getElementById(fw.blocksElId);
+  summaryEl.innerHTML = '';
+  blocksEl.innerHTML = '';
+
+  fw.clauses.forEach(clause=>{
+    const pct = clausePercent(fw, clause);
+    const chip = document.createElement('div');
+    chip.className = 'clause-chip';
+    chip.innerHTML = `
+      <div class="cn">${clause.id.toUpperCase()}</div>
+      <div class="ct">${clause.name.replace(/^(Clause \d+|Element \d+) — /,'')}</div>
+      <div class="cbar"><i style="width:${pct}%;"></i></div>
+      <div class="cpct">${pct}% self-assessed</div>
+    `;
+    chip.addEventListener('click', ()=>{
+      document.getElementById('block-'+fw.id+'-'+clause.id).scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    summaryEl.appendChild(chip);
+
+    const block = document.createElement('div');
+    block.className = 'clause-block';
+    block.id = 'block-'+fw.id+'-'+clause.id;
+    let itemsHtml = clause.items.map(([code, text])=>{
+      const id = clause.id+"__"+code;
+      const checked = !!fw.state[id];
+      return `
+        <div class="check-item ${checked?'checked':''}" data-id="${id}">
+          <input type="checkbox" id="chk-${fw.id}-${id}" ${checked?'checked':''}>
+          <label for="chk-${fw.id}-${id}"><span class="code">${code}</span>${text}</label>
+        </div>
+      `;
+    }).join('');
+    block.innerHTML = `
+      <div class="clause-head">
+        <h3>${clause.name}</h3>
+        <span class="cpct">${pct}%</span>
+      </div>
+      ${itemsHtml}
+    `;
+    blocksEl.appendChild(block);
+  });
+
+  blocksEl.querySelectorAll('.check-item input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change', (e)=>{
+      const row = e.target.closest('.check-item');
+      const id = row.dataset.id;
+      fw.state[id] = e.target.checked;
+      saveFrameworkState(fw);
+      row.classList.toggle('checked', e.target.checked);
+      updateFrameworkGauges(fw);
+      document.getElementById('heroPct').textContent = overallPercent();
+    });
+  });
+}
+
+function updateFrameworkGauges(fw){
+  const summaryEl = document.getElementById(fw.summaryElId);
+  const blocksEl = document.getElementById(fw.blocksElId);
+  summaryEl.querySelectorAll('.clause-chip').forEach((chip, idx)=>{
+    const pct = clausePercent(fw, fw.clauses[idx]);
+    chip.querySelector('.cbar i').style.width = pct+'%';
+    chip.querySelector('.cpct').textContent = pct+'% self-assessed';
+  });
+  blocksEl.querySelectorAll('.clause-block').forEach((block, idx)=>{
+    const pct = clausePercent(fw, fw.clauses[idx]);
+    block.querySelector('.clause-head .cpct').textContent = pct+'%';
+  });
+}
+
+FRAMEWORKS.forEach(fw=>{
+  document.getElementById(fw.resetBtnId).addEventListener('click', ()=>{
+    if(confirm('Reset all '+fw.label+' ticks? This cannot be undone.')){
+      fw.state = {};
+      saveFrameworkState(fw);
+      renderFramework(fw);
+      document.getElementById('heroPct').textContent = overallPercent();
+    }
+  });
+});
+
+FRAMEWORKS.forEach(renderFramework);
+document.getElementById('heroPct').textContent = overallPercent();
+
+// ---------------- Rich visuals: time-series trend chart + donut gauges ----------------
+// Real monthly data from the site incident management system (Aug 2024 – Feb 2026)
+const TREND_MONTHS = ["Aug-24","Sep-24","Oct-24","Nov-24","Dec-24","Jan-25","Feb-25","Mar-25","Apr-25","May-25","Jun-25","Jul-25","Aug-25","Sep-25","Oct-25","Nov-25","Dec-25","Jan-26","Feb-26"];
+const TREND_NEARMISS = [0,0,0,2,1,0,1,4,16,16,28,37,14,40,16,48,26,22,15];
+const TREND_ACCIDENT = [1,3,2,4,6,1,2,1,3,1,2,2,0,1,2,1,1,3,1];
+
+function renderTrendChart(containerId){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  const W = 760, H = 320, padL = 42, padR = 16, padT = 18, padB = 46;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const n = TREND_MONTHS.length;
+  const yMax = 55;
+  const xAt = i => padL + (i/(n-1))*plotW;
+  const yAt = v => padT + plotH - (v/yMax)*plotH;
+
+  const nmPoints = TREND_NEARMISS.map((v,i)=>`${xAt(i)},${yAt(v)}`).join(' ');
+  const accPoints = TREND_ACCIDENT.map((v,i)=>`${xAt(i)},${yAt(v)}`).join(' ');
+  const areaPath = `M${xAt(0)},${yAt(0)} L${nmPoints.split(' ').join(' L')} L${xAt(n-1)},${yAt(0)} Z`;
+
+  const gridLines = [0,10,20,30,40,50].map(v=>{
+    const y = yAt(v);
+    return `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#DCE3EA" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="${padL-8}" y="${y+4}" font-size="11" fill="#5B6B7F" text-anchor="end" font-family="IBM Plex Mono, monospace">${v}</text>`;
+  }).join('');
+
+  const monthLabels = TREND_MONTHS.map((m,i)=>{
+    if(i % 2 !== 0) return '';
+    const x = xAt(i);
+    return `<text x="${x}" y="${H-padB+16}" font-size="9.5" fill="#5B6B7F" text-anchor="end" transform="rotate(-45 ${x} ${H-padB+16})">${m}</text>`;
+  }).join('');
+
+  const aprIdx = 8; // Apr-25 — reporting programme begins
+  const aprX = xAt(aprIdx);
+
+  const nmDots = TREND_NEARMISS.map((v,i)=>`<circle cx="${xAt(i)}" cy="${yAt(v)}" r="3" fill="#0F766E"/>`).join('');
+  const accDots = TREND_ACCIDENT.map((v,i)=>`<circle cx="${xAt(i)}" cy="${yAt(v)}" r="2.5" fill="#E63946"/>`).join('');
+
+  el.innerHTML = `
+  <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0F766E" stop-opacity="0.30"/>
+        <stop offset="100%" stop-color="#0F766E" stop-opacity="0.02"/>
+      </linearGradient>
+    </defs>
+    ${gridLines}
+    <line x1="${aprX}" y1="${padT}" x2="${aprX}" y2="${H-padB}" stroke="#FFB703" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="${aprX+6}" y="${padT+12}" font-size="10.5" fill="#C88A00" font-weight="600">Reporting programme begins</text>
+    <path d="${areaPath}" fill="url(#trendFill)"/>
+    <polyline points="${nmPoints}" fill="none" stroke="#0F766E" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="${accPoints}" fill="none" stroke="#E63946" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+    ${nmDots}
+    ${accDots}
+    ${monthLabels}
+    <line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#334155" stroke-width="1.2"/>
+    <g transform="translate(${W-180},${padT})">
+      <circle cx="0" cy="0" r="4" fill="#0F766E"/><text x="10" y="4" font-size="11" fill="#1E2A3A">Near miss / hazard</text>
+      <circle cx="0" cy="18" r="4" fill="#E63946"/><text x="10" y="22" font-size="11" fill="#1E2A3A">Accident</text>
+    </g>
+  </svg>`;
+}
+
+function renderDonutGauge(containerId, pct, color, size=88){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  const r = size/2 - 8;
+  const c = 2*Math.PI*r;
+  const offset = c * (1 - pct/100);
+  el.innerHTML = `
+  <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#E4E9EF" stroke-width="9"/>
+    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="9"
+      stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"
+      transform="rotate(-90 ${size/2} ${size/2})"/>
+    <text x="${size/2}" y="${size/2+6}" font-size="18" font-weight="700" fill="#0B1F3A" text-anchor="middle" font-family="Oswald, sans-serif">${pct}%</text>
+  </svg>`;
+}
+
+renderTrendChart('trendChart');
+renderDonutGauge('gaugeCloseRate', 99.7, '#0F766E');
+renderDonutGauge('gaugeShare', 33, '#0F766E');
+renderDonutGauge('gaugeDcrShare', 76, '#FFB703');
+renderDonutGauge('gaugeDcrClose', 93, '#FFB703');
+</script>
+
+</body>
+</html>
