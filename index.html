@@ -485,7 +485,7 @@
     <div class="stat-grid">
       <div class="stat-card teal">
         <div class="num">108</div>
-        <div class="lbl">Near-misses personally raised via SafetyQube, 107 closed (99.1%)</div>
+        <div class="lbl">Reports personally raised via SafetyQube (102 near misses and hazards, 6 accident reports), all closed</div>
       </div>
       <div class="stat-card teal">
         <div class="num">93%</div>
@@ -510,13 +510,13 @@
   <!-- ================= SAFETY EVIDENCE ================= -->
   <section class="tabpanel" id="tab-safety">
     <h2 class="panel-title">Safety Evidence</h2>
-    <p class="panel-lede">Verified outcomes from co-implementing SafetyQube, an EHS management system, and driving root-cause corrective action on an 11-person direct team across 260 processes.</p>
+    <p class="panel-lede">Outcomes from co-implementing SafetyQube, an EHS management system, and driving root-cause corrective action on an 11-person direct team across 260 processes.</p>
 
     <div class="card" style="margin-bottom:20px;">
       <h3>Near-Miss Reporting vs Accident Frequency — Aug 2024 to Feb 2026</h3>
       <div id="trendChart"></div>
       <p style="font-size:12.5px; color:var(--ink-soft); margin-top:6px; line-height:1.5;">
-        Monthly counts from the site incident management system. SafetyQube reporting scaled from near-zero to 40+ reports/month from April 2025 — while accident frequency (red) stayed flat throughout, the sign that rising reports reflected a genuine culture shift, not more risk.
+        Monthly counts by date of occurrence, from an export of the site incident management system. SafetyQube logging began in April 2025, so the near-zero months before then are reports added afterwards, not a measured baseline. Accident reports for August to December 2024 were entered in bulk in June 2025. No hours worked are available, so this chart shows counts only, not an accident rate or a trend.
       </p>
     </div>
 
@@ -526,22 +526,19 @@
         <div class="gauge-row">
           <div class="gauge-item">
             <div id="gaugeCloseRate"></div>
-            <div class="gauge-label">Personal close rate<br><span class="mono">107 of 108 closed</span></div>
+            <div class="gauge-label">Personal close rate<br><span class="mono">108 of 108 closed</span></div>
           </div>
           <div class="gauge-item">
             <div id="gaugeShare"></div>
             <div class="gauge-label">Share of all<br>site reports</div>
           </div>
         </div>
-        <div class="bar-row" style="margin-top:6px;">
-          <div class="bar-head"><span>Site-wide reporting uplift</span><span class="mono">22%</span></div>
-          <div class="bar-track"><div class="bar-fill" style="width:22%;"></div></div>
-        </div>
+        <p style="font-size:13px; color:var(--ink-soft); margin-top:6px; line-height:1.5;">Top reporter on site: 108 reports, against 52 for the next highest. 324 reports were logged from April 2025 to March 2026 by 22 people. My own reports rose from 19 in April to June 2025 to 45 in October to December 2025.</p>
         <p style="font-size:13px; color:var(--ink-soft); margin-top:14px; line-height:1.5;">
-          Accident frequency held flat through 2025–2026 even as reporting rose — the sign that the culture shift caught real risk rather than adding noise.
+          Accident reports by month of occurrence: 13 from April to December 2025 and 4 in January and February 2026. That is too short a series to show a trend, and without hours worked it cannot give an accident rate.
         </p>
         <p style="font-size:13px; color:var(--ink-soft); margin-top:10px; line-height:1.5;">
-          Of my 108 reports, 1 was not closed. It needed investment that was not available because of the site closure, so the risk was managed instead. Site-wide, 323 of 324 reports were closed (99.7%).
+          All 108 of my reports show as closed in the export. Site-wide, 323 of 324 reports were closed (99.7%). The one open record is an accident report raised by someone else, still under investigation.
         </p>
       </div>
 
@@ -1001,7 +998,7 @@ function renderDonutGauge(containerId, pct, color, size=88){
 }
 
 renderTrendChart('trendChart');
-renderDonutGauge('gaugeCloseRate', 99.1, '#0F766E');
+renderDonutGauge('gaugeCloseRate', 100, '#0F766E');
 renderDonutGauge('gaugeShare', 33, '#0F766E');
 renderDonutGauge('gaugeDcrShare', 76, '#FFB703');
 renderDonutGauge('gaugeDcrClose', 93, '#FFB703');
