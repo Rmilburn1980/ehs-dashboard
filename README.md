@@ -1,5 +1,9 @@
 # EHS Readiness Dashboard
 
+[![EHS readiness dashboard overview with safety evidence figures](docs/screenshot.png)](https://rmilburn1980.github.io/ehs-dashboard/)
+
+[Try it live](https://rmilburn1980.github.io/ehs-dashboard/) · [Portfolio hub](https://rmilburn1980.github.io/)
+
 Live: https://rmilburn1980.github.io/ehs-dashboard/
 
 Five tabs: an overview of my safety evidence, safety reporting figures from SafetyCube (an EHS management system), an ISO 14001:2026 self-assessment, the H&S management system laid out on the POPMAR model, and a qualifications roadmap.
