@@ -441,6 +441,91 @@
     font-family:'IBM Plex Mono',monospace;
   }
   footer a{color:var(--teal); text-decoration:none;}
+
+  /* ---------- Regulatory intelligence maturity ---------- */
+  .lvl-strip{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+    margin-bottom:24px;
+  }
+  @media (max-width:900px){ .lvl-strip{grid-template-columns:1fr;} }
+  .lvl-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-top:4px solid var(--teal);
+    border-radius:10px;
+    padding:14px 14px 16px 14px;
+    cursor:pointer;
+    transition:box-shadow .15s, transform .15s;
+  }
+  .lvl-card:hover{box-shadow:0 4px 14px rgba(11,31,58,0.08); transform:translateY(-1px);}
+  .lvl-card.current{border-top-color:var(--amber); box-shadow:0 0 0 2px var(--amber);}
+  .lvl-card .ln{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft);}
+  .lvl-card .lt{font-size:14px; font-weight:600; color:var(--navy); margin:2px 0 6px 0; line-height:1.3;}
+  .lvl-card .lq{font-size:12.5px; color:var(--ink-soft); font-style:italic; line-height:1.4;}
+  .lvl-detail{display:none; margin-top:12px; padding-top:12px; border-top:1px solid var(--line);}
+  .lvl-card.open .lvl-detail{display:block;}
+  .lvl-detail p{font-size:12.5px; line-height:1.5; color:var(--ink); margin:0 0 8px 0;}
+  .lvl-detail .wn-tag{margin-top:6px;}
+  .lvl-detail ul{margin:0 0 6px 0; padding-left:16px; font-size:12.5px; line-height:1.45; color:var(--ink);}
+
+  .q-block{padding:14px 4px; border-bottom:1px solid var(--line);}
+  .q-block:last-child{border-bottom:none;}
+  .q-block .qt{font-size:14.5px; line-height:1.45; color:var(--ink); margin-bottom:8px;}
+  .q-block .qt .code{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--teal); display:block; margin-bottom:2px;}
+  .q-opts{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:8px;}
+  .q-opt{
+    display:flex; gap:8px; align-items:flex-start;
+    border:1px solid var(--line); border-radius:8px;
+    padding:8px 10px; font-size:13px; line-height:1.4; color:var(--ink); cursor:pointer;
+    background:var(--panel);
+  }
+  .q-opt:hover{border-color:var(--teal);}
+  .q-opt input{accent-color:var(--teal); margin-top:2px; flex-shrink:0; cursor:pointer;}
+  .q-opt.sel{border-color:var(--teal); background:#ECFDF9;}
+
+  .score-card{border-top:3px solid var(--amber);}
+  .score-head{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:10px;}
+  .score-num{font-family:'Oswald',sans-serif; font-size:40px; color:var(--navy); line-height:1;}
+  .score-lvl{font-family:'Oswald',sans-serif; font-size:20px; color:var(--navy); text-transform:uppercase;}
+  .score-note{font-size:13.5px; line-height:1.55; color:var(--ink); margin:0 0 10px 0;}
+  .score-meta{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);}
+
+  .op-table{width:100%; border-collapse:collapse; font-size:12.5px; line-height:1.4;}
+  .op-table th{
+    text-align:left; background:var(--navy); color:#fff;
+    font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:0.04em;
+    font-size:12px; font-weight:400; padding:8px 10px;
+  }
+  .op-table td{padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; color:var(--ink);}
+  .op-table td.lv{font-weight:600; color:var(--navy); white-space:nowrap;}
+  .op-table td.lv small{display:block; font-weight:400; font-style:italic; color:var(--ink-soft); white-space:normal;}
+  .op-scroll{overflow-x:auto;}
+  .op-points{margin:14px 0 0 0; padding-left:18px; font-size:13px; line-height:1.55; color:var(--ink);}
+  .op-source{font-size:11.5px; color:var(--ink-soft); margin-top:12px; line-height:1.45;}
+  .op-actions{display:flex; justify-content:flex-end; margin-bottom:10px;}
+  .op-actions button{
+    background:var(--navy); color:#fff; border:none; border-radius:7px;
+    font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:0.04em;
+    font-size:13px; padding:9px 16px; cursor:pointer;
+  }
+  .op-actions button:hover{background:var(--navy-light);}
+
+  @page{margin:10mm;}
+  @media print{
+    body.print-one, html:has(body.print-one){background:#fff !important;}
+    body.print-one > a, body.print-one header.top, body.print-one footer{display:none !important;}
+    body.print-one main{padding:0 !important; max-width:none !important;}
+    body.print-one section.tabpanel{display:none !important;}
+    body.print-one #tab-regint{display:block !important; animation:none !important;}
+    body.print-one #tab-regint > *:not(#maturityOnePager){display:none !important;}
+    body.print-one #maturityOnePager{border:none !important; padding:0 !important; margin:0 !important; background:#fff !important; box-shadow:none !important;}
+    body.print-one .op-actions{display:none !important;}
+    body.print-one .op-table{font-size:9.5pt;}
+    body.print-one .op-points, body.print-one .op-source{font-size:9pt;}
+    body.print-one .op-table th{background:#0B1F3A !important; color:#fff !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  }
 </style>
 <link rel="stylesheet" href="https://rmilburn1980.github.io/theme.css">
 <link rel="stylesheet" href="https://rmilburn1980.github.io/theme-ehs.css">
@@ -472,6 +557,7 @@
     <button class="tab-btn" data-tab="ehs">EHS Readiness (ISO 14001:2026)</button>
     <button class="tab-btn" data-tab="hs">H&amp;S Management System</button>
     <button class="tab-btn" data-tab="roadmap">Qualifications Roadmap</button>
+    <button class="tab-btn" data-tab="regint">Regulatory Intelligence</button>
   </nav>
 </header>
 
@@ -683,6 +769,39 @@
         <div class="roadmap-item"><div class="roadmap-dot progress"></div><div><div class="rt">NEBOSH General Certificate</div></div></div>
         <div class="roadmap-item"><div class="roadmap-dot progress"></div><div><div class="rt">AI in Manufacturing Certification</div></div></div>
       </div>
+    </div>
+  </section>
+
+  <!-- ================= REGULATORY INTELLIGENCE MATURITY ================= -->
+  <section class="tabpanel" id="tab-regint">
+    <h2 class="panel-title">Regulatory Intelligence Maturity</h2>
+    <p class="panel-lede">A five-level lens for how well a workplace tracks, interprets and acts on changing EHS law, from scattered site-by-site checking to forward-looking horizon scanning. Use it to score a site you have worked in, or to ask sharper questions of an employer you are interviewing with.</p>
+
+    <div class="disclaimer">
+      <strong>How to use this:</strong> click a level to open its detail, then answer the 10 questions to see where a workplace lands. The level model follows Enhesa's published EHS regulatory intelligence maturity model (2026); the questions, score bands and wording here are my own adaptation, so the result is a conversation tool, not an audit or a benchmark. Answers save automatically in this browser.
+    </div>
+
+    <div class="lvl-strip" id="lvlStrip"></div>
+
+    <div class="card">
+      <h3>Score a workplace: 10 questions</h3>
+      <div id="qList"></div>
+      <div class="reset-row"><button id="resetRegint">Reset answers</button></div>
+    </div>
+
+    <div class="card score-card" id="scoreCard">
+      <h3>Result</h3>
+      <div id="scoreBody"></div>
+    </div>
+
+    <div class="card" id="maturityOnePager">
+      <div class="op-actions"><button id="printOnePager">Print one-pager</button></div>
+      <h3>Interview one-pager: EHS regulatory intelligence maturity</h3>
+      <div class="op-scroll">
+        <table class="op-table" id="opTable"></table>
+      </div>
+      <ul class="op-points" id="opPoints"></ul>
+      <div class="op-source">Level model: Enhesa, EHS regulatory intelligence maturity model (info.enhesa.com/ehs-regulatory-intelligence-maturity), summarised in my own words. Vendor material, so treat it as a framing device. A self-assessment of my own knowledge, not a certification, an audit result or advice.</div>
     </div>
   </section>
 
@@ -1002,6 +1121,164 @@ renderDonutGauge('gaugeCloseRate', 100, '#0F766E');
 renderDonutGauge('gaugeShare', 33, '#0F766E');
 renderDonutGauge('gaugeDcrShare', 76, '#FFB703');
 renderDonutGauge('gaugeDcrClose', 93, '#FFB703');
+</script>
+
+<script>
+// ---------------- Regulatory intelligence maturity (level model after Enhesa 2026; wording and scoring are my own) ----------------
+const RI_LEVELS = [
+  { n:1, name:"Fragmented compliance", q:"Do we know the rule?",
+    looks:"Each site tracks law its own way: agency websites, consultant emails, personal memory. There is no shared view and no common method.",
+    holds:["Site managers resist central oversight","No budget case, because compliance is seen as handled","No shared definition of what compliant means"],
+    moves:["A forcing event such as a failed audit, accident or acquisition","Piloting one topic or country centrally","Putting a cost on duplicated effort"] },
+  { n:2, name:"Centralised awareness", q:"Can we see everything?",
+    looks:"A platform and alerts exist and coverage is decent, but seeing a regulation is not the same as knowing what site X must do by when. Confidence is often higher than it should be.",
+    holds:["Applicability is checked by hand","Alert overload, so little gets acted on","Site teams do not use the data day to day","No link from the law to tasks, deadlines and audit trails"],
+    moves:["Work out which requirements apply to which site","Triage alerts for significance, not just forward them","Give site managers actions, not legal text"] },
+  { n:3, name:"Actionable intelligence", q:"What do we need to do?",
+    looks:"Changes arrive with context, the team knows which ones hit its sites, audits are backed by structured data and more time goes on acting than researching.",
+    holds:["Only enacted law is tracked, not proposals","EHS, ESG and product compliance sit in separate systems","Obligations are labelled differently across sites"],
+    moves:["Expert interpretation as a standard input","Harmonise how sites label obligations","A reporting or ESG mandate that forces joined-up data"] },
+  { n:4, name:"Transformed intelligence", q:"Where should we focus?",
+    looks:"Compliance is built into decisions on new markets, acquisitions and investment. There is one reconciled global and local view, and posture can be compared with peers.",
+    holds:["Horizon scanning needs specialist time few teams have","Unchecked AI summaries cannot be relied on","Rules diverging between countries make one global position harder"],
+    moves:["Track proposals and consultations as well as enacted law","Add human expert checking to automated output","Show each role (director, site manager, auditor) its own cut of the data"] },
+  { n:5, name:"Predictive, AI-enabled intelligence", q:"What is coming, and are we ready?",
+    looks:"Signals are caught months before they become requirements, the organisation is already positioned for them, and it can show the board and regulators that.",
+    holds:["Most get here by fixing each earlier level in order, not by skipping to it"],
+    moves:["Keep expert validation on anything AI produces","Keep modelling proposals before they land"] }
+];
+const RI_BANDS = [ {lvl:1,min:10,max:15}, {lvl:2,min:16,max:21}, {lvl:3,min:22,max:28}, {lvl:4,min:29,max:34}, {lvl:5,min:35,max:40} ];
+const RI_QUESTIONS = [
+  { short:"Finding out about change", t:"How do you hear about new or changed EHS law that applies to your sites?",
+    o:["After an auditor or regulator raises it","Someone checks agency websites by hand","Consultants or a dedicated tool tell us","Verified alerts from one system"] },
+  { short:"Visibility across sites", t:"How complete is your view across every site and country?",
+    o:["Probably big gaps","Main countries only","Mostly covered, some gaps","Full and kept current"] },
+  { short:"Countries tracked", t:"How many countries do you actively track?", hint:"A single-country site can still score well on the other nine.",
+    o:["1 to 5","6 to 15","16 to 30","31 or more"] },
+  { short:"Applicability", t:"When law changes, how do you decide which sites it applies to?",
+    o:["One person's judgement","A structured checklist","The tool filters by site","Automatic, expert checked and tied to specific obligations"] },
+  { short:"Missed requirements", t:"How often are requirements missed or found late?",
+    o:["6 or more times a year","3 to 6 times a year","1 or 2 times a year","Rarely or never"] },
+  { short:"Time spent tracking", t:"How much team time goes on manually tracking and researching change?",
+    o:["Over 60%","40 to 60%","20 to 40%","Under 20%"] },
+  { short:"Time to understand impact", t:"How long does it take to work out what a change means for your sites?",
+    o:["Weeks to months","One to two weeks","A few days","Same day, with expert interpretation built in"] },
+  { short:"Horizon visibility", t:"How far ahead do you see regulatory change?",
+    o:["After it takes effect","Major changes only","We monitor proactively","We forecast and plan around what is coming"] },
+  { short:"Frameworks tracked", t:"How many regulatory frameworks do you track across EHS topics?", hint:"Scale matters less for a small single-site operation.",
+    o:["Fewer than 20","20 to 50","51 to 100","Over 100"] },
+  { short:"Joined-up data", t:"Is EHS compliance data held alongside product and chemical compliance data?",
+    o:["Not looked at it","Completely separate systems","Separate, with some overlap","One shared source"] }
+];
+const RI_KEY = "ehs_regint_maturity_v1";
+let riState = {};
+try{ riState = JSON.parse(localStorage.getItem(RI_KEY)) || {}; }catch(e){ riState = {}; }
+function riSave(){ try{ localStorage.setItem(RI_KEY, JSON.stringify(riState)); }catch(e){} }
+
+function riRenderStrip(currentLvl){
+  const strip = document.getElementById('lvlStrip');
+  const openSet = new Set([...strip.querySelectorAll('.lvl-card.open')].map(c=>c.dataset.n));
+  strip.innerHTML = RI_LEVELS.map(l=>`
+    <div class="lvl-card ${currentLvl===l.n?'current':''} ${openSet.has(String(l.n))?'open':''}" data-n="${l.n}">
+      <div class="ln">LEVEL ${l.n}</div>
+      <div class="lt">${l.name}</div>
+      <div class="lq">"${l.q}"</div>
+      <div class="lvl-detail">
+        <p>${l.looks}</p>
+        <div class="wn-tag">What holds teams here</div>
+        <ul>${l.holds.map(h=>`<li>${h}</li>`).join('')}</ul>
+        <div class="wn-tag">What moves them on</div>
+        <ul>${l.moves.map(h=>`<li>${h}</li>`).join('')}</ul>
+      </div>
+    </div>`).join('');
+  strip.querySelectorAll('.lvl-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+}
+
+function riRenderQuestions(){
+  const list = document.getElementById('qList');
+  list.innerHTML = RI_QUESTIONS.map((q,i)=>`
+    <div class="q-block">
+      <div class="qt"><span class="code">Q${i+1}</span>${q.t}${q.hint?` <em style="color:var(--ink-soft);font-size:12.5px;">${q.hint}</em>`:''}</div>
+      <div class="q-opts">
+        ${q.o.map((txt,j)=>`
+          <label class="q-opt ${riState['q'+i]===j+1?'sel':''}">
+            <input type="radio" name="riq${i}" value="${j+1}" ${riState['q'+i]===j+1?'checked':''}>
+            <span>${txt}</span>
+          </label>`).join('')}
+      </div>
+    </div>`).join('');
+  list.querySelectorAll('input[type=radio]').forEach(r=>{
+    r.addEventListener('change',e=>{
+      const idx = e.target.name.replace('riq','');
+      riState['q'+idx] = parseInt(e.target.value,10);
+      riSave();
+      e.target.closest('.q-opts').querySelectorAll('.q-opt').forEach(o=>o.classList.remove('sel'));
+      e.target.closest('.q-opt').classList.add('sel');
+      riRenderResult();
+    });
+  });
+}
+
+function riRenderResult(){
+  const body = document.getElementById('scoreBody');
+  const answered = RI_QUESTIONS.filter((_,i)=>riState['q'+i]).length;
+  if(answered < RI_QUESTIONS.length){
+    body.innerHTML = `<p class="score-note">Answer all 10 questions to see a level. <span class="score-meta">${answered} of 10 answered</span></p>`;
+    riRenderStrip(null);
+    return;
+  }
+  const total = RI_QUESTIONS.reduce((s,_,i)=>s+riState['q'+i],0);
+  const band = RI_BANDS.find(b=>total>=b.min && total<=b.max);
+  const lvl = RI_LEVELS[band.lvl-1];
+  const gaps = RI_QUESTIONS.map((q,i)=>({short:q.short, v:riState['q'+i]})).filter(x=>x.v<=2).sort((a,b)=>a.v-b.v).slice(0,3);
+  body.innerHTML = `
+    <div class="score-head">
+      <div class="score-num">${total}<span style="font-size:18px;color:var(--ink-soft);"> / 40</span></div>
+      <div class="score-lvl">Level ${lvl.n}: ${lvl.name}</div>
+    </div>
+    <p class="score-note">${lvl.looks}</p>
+    <div class="wn-tag">What typically holds a workplace here</div>
+    <ul class="op-points" style="margin-top:4px;">${lvl.holds.map(h=>`<li>${h}</li>`).join('')}</ul>
+    <div class="wn-tag" style="margin-top:12px;">Next moves</div>
+    <ul class="op-points" style="margin-top:4px;">${lvl.moves.map(h=>`<li>${h}</li>`).join('')}</ul>
+    ${gaps.length ? `<p class="score-meta" style="margin-top:12px;">Lowest scoring areas: ${gaps.map(g=>g.short).join(', ')}</p>` : ''}
+    <p class="score-meta" style="margin-top:8px;">Score bands (my own): L1 10 to 15, L2 16 to 21, L3 22 to 28, L4 29 to 34, L5 35 to 40.</p>`;
+  riRenderStrip(lvl.n);
+}
+
+function riRenderOnePager(){
+  document.getElementById('opTable').innerHTML = `
+    <thead><tr><th>Level</th><th>What it looks like</th><th>What holds it back</th><th>What moves it on</th></tr></thead>
+    <tbody>${RI_LEVELS.map(l=>`
+      <tr>
+        <td class="lv">${l.n}. ${l.name}<small>"${l.q}"</small></td>
+        <td>${l.looks}</td>
+        <td>${l.holds.join('. ')}.</td>
+        <td>${l.moves.join('. ')}.</td>
+      </tr>`).join('')}</tbody>`;
+  document.getElementById('opPoints').innerHTML = [
+    "Level 2 is the common trap: seeing every regulation is not the same as knowing what applies to a given site and who must do what by when.",
+    "Questions I would ask an employer: how do you decide which changes apply to which site, and how long from a change being published to a named action with a named owner?",
+    "My view for a single-country UK operation: the realistic route to Level 3 is a legal register tied to site activities, a named owner and a regular review, before any software.",
+    "My practical evidence is operational: co-implementing SafetyCube, an EHS management system, on the Caravan Assembly Line, where near-miss reporting grew sharply once it began (Safety Evidence tab). I am describing the framework, not claiming to have run a regulatory intelligence platform."
+  ].map(p=>`<li>${p}</li>`).join('');
+}
+
+document.getElementById('resetRegint').addEventListener('click',()=>{
+  if(confirm('Reset all regulatory intelligence answers? This cannot be undone.')){
+    riState = {}; riSave(); riRenderQuestions(); riRenderResult();
+  }
+});
+document.getElementById('printOnePager').addEventListener('click',()=>{
+  document.body.classList.add('print-one');
+  const done = ()=>{ document.body.classList.remove('print-one'); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  window.print();
+});
+
+riRenderQuestions();
+riRenderResult();
+riRenderOnePager();
 </script>
 
 <!-- Back to portfolio hub: paste this block just before </body> on every dashboard page -->
