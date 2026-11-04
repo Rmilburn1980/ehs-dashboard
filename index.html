@@ -836,6 +836,15 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
     document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
   });
 });
+// Open a tab straight from a link such as ehs-dashboard/#regint
+function openTabFromHash(){
+  const id = (location.hash || '').replace('#','');
+  if(!id) return;
+  const btn = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+  if(btn) btn.click();
+}
+openTabFromHash();
+window.addEventListener('hashchange', openTabFromHash);
 
 // ---------------- Checklist frameworks (ISO 14001:2026 + H&S POPMAR) ----------------
 const ISO14001_CLAUSES = [
