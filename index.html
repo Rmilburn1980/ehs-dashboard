@@ -91,6 +91,7 @@
   .contact-line a:hover{text-decoration:underline;}
 
   .hero-gauge{
+    font:inherit;color:inherit;text-align:left;cursor:pointer;max-width:340px;
     display:flex;
     align-items:center;
     gap:16px;
@@ -106,6 +107,8 @@
     color:#AFC1D8;
     text-transform:uppercase;
   }
+  .hero-gauge:hover,.hero-gauge:focus-visible{border-color:var(--amber);outline:none;background:rgba(255,255,255,0.1)}
+  .hero-gauge .g-hint{font-size:12px;line-height:1.4;color:#CFE0F5;margin-top:4px}
   .hero-gauge .g-value{
     font-family:'Oswald',sans-serif;
     font-size:34px;
@@ -551,7 +554,7 @@
 <header class="top">
   <div class="top-inner">
     <div class="brand-block">
-      <div class="eyebrow">Personal EHS Portfolio · Live Self-Assessment</div>
+      <div class="eyebrow">Personal EHS Portfolio · Try-it-yourself checklists</div>
       <h1>EHS Readiness Dashboard</h1>
       <p class="sub">Richard Milburn — 21 years on the shop floor, now building formal EHS management knowledge on top of it.</p>
       <div class="contact-line">
@@ -560,12 +563,13 @@
         <a href="https://rmilburn1980.github.io/sqcdp-dashboard" target="_blank">rmilburn1980.github.io/sqcdp-dashboard</a>
       </div>
     </div>
-    <div class="hero-gauge">
+    <button type="button" class="hero-gauge" id="heroGauge" aria-describedby="heroHint">
       <div>
-        <div class="g-label">EHS<br>Self-Assessment</div>
+        <div class="g-label">Try it yourself</div>
+        <div class="g-hint" id="heroHint">Score your own site on the ISO 14001 and POPMAR checklists. Saved only in your browser.</div>
       </div>
-      <div class="g-value"><span id="heroPct">0</span>%</div>
-    </div>
+      <div class="g-value" id="heroValue">Start</div>
+    </button>
   </div>
   <nav class="tabs">
     <button class="tab-btn active" data-tab="overview">Overview</button>
@@ -581,7 +585,7 @@
   <!-- ================= OVERVIEW ================= -->
   <section class="tabpanel active" id="tab-overview">
     <h2 class="panel-title">Overview</h2>
-    <p class="panel-lede">A working evidence base for Operations, Continuous Improvement, and EHS leadership roles — including co-implementing SafetyQube, an EHS (environment, health, and safety) management system, on the Caravan Assembly Line at Erwin Hymer Group UK, alongside an honest, in-progress self-assessment against the current ISO 14001 environmental management standard.</p>
+    <p class="panel-lede">A working evidence base for Operations, Continuous Improvement, and EHS leadership roles — including co-implementing SafetyQube, an EHS (environment, health, and safety) management system, on the Caravan Assembly Line at Erwin Hymer Group UK, alongside checklists for the current ISO 14001 environmental management standard and the POPMAR health and safety model that you can score yourself.</p>
 
     <div class="stat-grid">
       <div class="stat-card teal">
@@ -791,7 +795,7 @@
 
 <footer>
   RICHARD MILBURN &nbsp;·&nbsp; EHS READINESS DASHBOARD &nbsp;·&nbsp; PERSONAL PORTFOLIO TOOL &nbsp;·&nbsp; SELF-ASSESSMENT, NOT CERTIFICATION
-<br> This is a self-assessment of the author's own knowledge. It is not a certification, an audit result or advice.</footer>
+<br> The checklists are for you to score yourself, and your ticks stay in your browser. They are not a certification, an audit result or advice.</footer>
 
 <script>
 // ---------------- Tabs ----------------
@@ -904,6 +908,15 @@ const FRAMEWORKS = [
     summaryElId:"clauseSummary-hs", blocksElId:"clauseBlocks-hs", resetBtnId:"resetBtn-hs", clauses: HS_POPMAR_CLAUSES }
 ];
 
+function updateHero(){
+  const pct = overallPercent();
+  const any = FRAMEWORKS.some(fw=>frameworkCounts(fw).checked>0);
+  document.getElementById('heroValue').textContent = any ? pct+'%' : 'Start';
+  document.getElementById('heroGauge').setAttribute('aria-label', any
+    ? 'Your checklist score: '+pct+'%. Open the checklists'
+    : 'Try it yourself: open the ISO 14001 checklist');
+}
+
 FRAMEWORKS.forEach(fw=>{
   try{ fw.state = JSON.parse(localStorage.getItem(fw.storageKey)) || {}; }
   catch(e){ fw.state = {}; }
@@ -986,7 +999,7 @@ function renderFramework(fw){
       saveFrameworkState(fw);
       row.classList.toggle('checked', e.target.checked);
       updateFrameworkGauges(fw);
-      document.getElementById('heroPct').textContent = overallPercent();
+      updateHero();
     });
   });
 }
@@ -1011,13 +1024,18 @@ FRAMEWORKS.forEach(fw=>{
       fw.state = {};
       saveFrameworkState(fw);
       renderFramework(fw);
-      document.getElementById('heroPct').textContent = overallPercent();
+      updateHero();
     }
   });
 });
 
 FRAMEWORKS.forEach(renderFramework);
-document.getElementById('heroPct').textContent = overallPercent();
+updateHero();
+document.getElementById('heroGauge').addEventListener('click',()=>{
+  const btn=document.querySelector('.tab-btn[data-tab="ehs"]');
+  btn.click();
+  btn.scrollIntoView({behavior:'smooth',block:'start'});
+});
 
 // ---------------- Rich visuals: time-series trend chart + donut gauges ----------------
 // Real monthly data from the site incident management system (Aug 2024 – Feb 2026)
